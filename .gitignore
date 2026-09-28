@@ -1,0 +1,30 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Env / secrets
+.env
+*.local
+
+# Data / models / indices (keep the repo light)
+data/
+models/
+*.faiss
+*.bin
+*.pt
+*.safetensors
+
+# Eval / benchmark artifacts
+evaluation/results/
+serving/benchmarks/results/
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/

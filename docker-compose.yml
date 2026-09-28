@@ -1,0 +1,53 @@
+# Local dev dependencies. Brings up the three stateful services the platform
+# needs so you can run the API against real backends, not mocks.
+#
+#   docker compose up -d
+#
+# The LLM (vLLM) is intentionally NOT here — it wants a GPU and usually lives on
+# a separate box. See serving/ and point LLM_BASE_URL at it.
+services:
+  postgres:
+    image: pgvector/pgvector:pg16   # Postgres 16 with the pgvector extension prebuilt
+    environment:
+      POSTGRES_DB: enterprise_ai
+      POSTGRES_USER: app
+      POSTGRES_PASSWORD: change_me
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      # Enables the extension on first boot; migrations create the tables.
+      - ./database/init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U app -d enterprise_ai"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redisdata:/data
+
+  opensearch:
+    image: opensearchproject/opensearch:2.15.0
+    environment:
+      - discovery.type=single-node
+      - bootstrap.memory_lock=true
+      - "OPENSEARCH_JAVA_OPTS=-Xms512m -Xmx512m"
+      # Dev only — security plugin disabled so you can hit :9200 over plain http.
+      # Do NOT run like this anywhere real.
+      - DISABLE_SECURITY_PLUGIN=true
+    ulimits:
+      memlock: { soft: -1, hard: -1 }
+    ports:
+      - "9200:9200"
+    volumes:
+      - osdata:/usr/share/opensearch/data
+
+volumes:
+  pgdata:
+  redisdata:
+  osdata:

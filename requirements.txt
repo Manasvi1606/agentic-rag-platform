@@ -1,0 +1,38 @@
+# ---- Core API ----
+fastapi>=0.111
+uvicorn[standard]>=0.30
+pydantic>=2.7
+pydantic-settings>=2.3
+sse-starlette>=2.1          # Server-Sent Events for streaming responses
+
+# ---- Data / storage ----
+psycopg[binary]>=3.1        # PostgreSQL driver
+pgvector>=0.3               # pgvector Python bindings
+sqlalchemy>=2.0
+alembic>=1.13              # migrations (database/migrations)
+redis>=5.0                 # semantic cache + conversation state
+opensearch-py>=2.6         # sparse (BM25) + dense hybrid search
+
+# ---- ML / retrieval ----
+sentence-transformers>=3.0 # embeddings + cross-encoder reranker
+transformers>=4.42
+torch>=2.3
+
+# ---- Agent orchestration ----
+langgraph>=0.2
+langchain-core>=0.2
+
+# ---- Evaluation ----
+ragas>=0.1.9
+datasets>=2.20
+
+# ---- Serving / benchmarking (Phase 7; often a separate GPU env) ----
+# vllm>=0.5                 # uncomment on the GPU box; heavy, CUDA-specific
+httpx>=0.27                # async client for load tests
+locust>=2.29              # optional load-generation harness
+
+# ---- Dev ----
+pytest>=8.2
+pytest-asyncio>=0.23
+ruff>=0.5
+mypy>=1.10
